@@ -1,0 +1,114 @@
+#
+# data volume containers
+#
+data00manet:
+  image: busybox:buildroot-2014.02
+  volumes:
+    - /tmp/manet
+data00redis:
+  image: busybox:buildroot-2014.02
+  volumes:
+    - /mnt/data/redis:/data
+data00gitbucket:
+  image: busybox:buildroot-2014.02
+  volumes:
+    - /mnt/data/gitbucket:/gitbucket
+data00mysql:
+  image: busybox:buildroot-2014.02
+  volumes:
+    - /mnt/data/mysql:/var/lib/mysql
+data00redmine:
+  image: busybox:buildroot-2014.02
+  volumes:
+    - /mnt/data/redmine/files:/home/redmine/data/files
+    - /mnt/data/redmine/plugins:/home/redmine/data/plugins
+    - /mnt/data/redmine/themes:/home/redmine/data/themes
+data00resourcespace:
+  image: busybox:buildroot-2014.02
+  volumes:
+    - /mnt/data/resourcespace/filestore:/var/www/html/resourcespace/filestore
+    - /mnt/data/resourcespace/homeanim:/var/www/html/resourcespace/gfx/homeanim
+#
+# reverse proxy container
+#
+proxy:
+  build: proxy
+  links:
+    - manet:manet
+    - gitbucket:gitbucket
+    - redmine:redmine
+    - ethercalc:ethercalc
+    - etherpad:etherpad
+    - resourcespace:resourcespace
+  ports:
+    - "80:80"
+    #- "443:443"
+#
+# db containers
+#
+mysql:
+  image: mysql:5.6.28
+  environment:
+    MYSQL_ROOT_PASSWORD: please_enter_your_password
+  volumes:
+    - ./mysql/:/docker-entrypoint-initdb.d
+  volumes_from:
+    - data00mysql
+  ports:
+    - "3306:3306"
+redis:
+  image: redis:3.0.7-alpine
+  volumes_from:
+    - data00redis
+  command: redis-server --appendonly yes
+#
+# application containers
+#
+etherpad:
+  image: tvelocity/etherpad-lite
+  links:
+    - mysql:mysql
+  environment:
+    ETHERPAD_ADMIN_PASSWORD: please_enter_your_password
+gitbucket:
+  image: f99aq8ove/gitbucket
+  ports:
+    - "29418:29418"
+  volumes_from:
+    - data00gitbucket
+  command: java -jar /opt/gitbucket.war --prefix=/gitbucket
+manet:
+  image: earlyclaim/docker-manet
+  volumes_from:
+    - data00manet
+  command: manet --storage /tmp/manet
+redmine:
+  image: sameersbn/redmine:3.2.0-4
+  volumes_from:
+    - data00redmine
+    - data00gitbucket
+  links:
+    - mysql:mysql
+  environment:
+    REDMINE_HTTPS: "false"
+    REDMINE_RELATIVE_URL_ROOT: /redmine
+    DB_USER: root
+    DB_NAME: redmine
+    DB_PASS: please_enter_your_password
+#   SMTP_USER: your@gmial.address
+#   SMTP_PASS: please_enter_your_password
+resourcespace:
+  build: resourcespace
+  links:
+    - mysql:mysql
+  volumes_from:
+    - data00resourcespace
+  environment:
+    MYSQL_USER_NAME: root
+    MYSQL_PASSWORD: please_enter_your_password
+    BASE_URL: //localhost:8888/resourcespace
+ethercalc:
+  image: audreyt/ethercalc
+  links:
+    - redis:redis
+  command: ["sh", "-c", "REDIS_HOST=$$REDIS_PORT_6379_TCP_ADDR REDIS_PORT=$$REDIS_PORT_6379_TCP_PORT pm2 start -x `which ethercalc` -- --cors --basepath /ethercalc/ && pm2 logs"]

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <title>Internal Service</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.4/darkly/bootstrap.min.css" />
+  <style type="text/css">
+    body {
+    }
+    body:before, body:after {
+      content: '';
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: -1;
+    }
+    body:before {
+      background: url(bkg.jpg) no-repeat center;
+      background-size: cover;
+      -webkit-filter: blur(10px);
+      filter: blur(10px);
+    }
+    body:after {
+      background: -moz-linear-gradient(top, hsla(0, 0%, 0%, 0) 0%, hsla(0, 0%, 0%, 0.65) 100%);
+      background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, hsla(0, 0%, 0%, 0)), color-stop(100%, hsla(0, 0%, 0%, 0.65)));
+      background: -webkit-linear-gradient(top, hsla(0, 0%, 0%, 0) 0%, hsla(0, 0%, 0%, 0.65) 100%);
+      background: -o-linear-gradient(top, hsla(0, 0%, 0%, 0) 0%, hsla(0, 0%, 0%, 0.65) 100%);
+      background: -ms-linear-gradient(top, hsla(0, 0%, 0%, 0) 0%, hsla(0, 0%, 0%, 0.65) 100%);
+      background: linear-gradient(to bottom, hsla(0, 0%, 0%, 0) 0%, hsla(0, 0%, 0%, 0.65) 100%);
+    }
+    .container {
+      margin-top: 2em;
+      margin-bottom: 2em;
+      border: 1px solid white;
+      border-radius: 10px;
+    }
+    .row {
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+
+    @media (max-width: 728px) {
+      .container {
+        margin-top: 0;
+        border: 0;
+      }
+      .header {
+        text-align: center;
+      }
+      .row {
+        padding-left: 6px;
+        padding-right: 6px;
+      }
+    }
+    .header h1 {
+      text-transform: uppercase;
+      margin-top: 50px;
+      margin-bottom: 50px;
+      font-size: 5em;
+      letter-spacing: -1px;
+      line-height: 1em;
+      word-spacing: -4px;
+      font-family:
+        'HelveticaNeueThin',
+        'HelveticaNeue-Thin',
+        'Helvetica Neue Thin',
+        'HelveticaNeue',
+        'Helvetica Neue',
+        'TeXGyreHerosRegular',
+        'Arial',
+        sans-serif;
+      font-weight: 200;
+      font-stretch: normal;
+    }
+    .inner {
+      border-top: 1px solid white;
+      margin-bottom: 1em;
+    }
+    .inner img {
+      width: 40px;
+    }
+    .note {
+      margin-bottom: 0.5em;
+    }
+    iframe {
+      background: white;
+      border-radius: 8px;
+      border: 0;
+      opacity: 0.65;
+      -webkit-filter: invert(100%);
+      filter: invert(100%);
+    }
+  </style>
+</head>
+<body>
+
+<div id="container" class="container">
+  <div class="row header">
+    <div class="col-xs-12">
+      <h1>Server Apps</h1>
+    </div>
+  </div>
+
+  <div class="row apps">
+    <div class="col-xs-12 col-sm-3">
+      <div class="inner">
+        <h3>Redmine</h3>
+        <p><a class="btn btn-success btn-block btn-sm" role="button" href="/redmine/" target="_blank">Redmine</a></p>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-3">
+      <div class="inner">
+        <h3>Gitbucket</h3>
+        <p><a class="btn btn-success btn-block btn-sm" role="button" href="/gitbucket/" target="_blank">Gitbucket</a></p>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-3">
+      <div class="inner">
+        <h3>RS</h3>
+        <p><a class="btn btn-success btn-block btn-sm" role="button" href="/resourcespace/" target="_blank">ResourceSpace</a></p>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-3">
+      <div class="inner">
+        <h3>Manet</h3>
+        <p><a class="btn btn-success btn-block btn-sm" role="button" href="/manet/" target="_blank">Manet</a></p>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-3">
+      <div class="inner">
+        <h3>Etherpad</h3>
+        <p><a class="btn btn-success btn-block btn-sm" role="button" href="/etherpad/" target="_blank">Etherpad</a></p>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-3">
+      <div class="inner">
+        <h3>EtherCalc</h3>
+        <p><a class="btn btn-success btn-block btn-sm" role="button" href="/ethercalc/" target="_blank">EtherCalc</a></p>
+      </div>
+    </div>
+  </div>
+  <div class="row note">
+    <div class="col-xs-12 col-sm-12">
+      <div class="inner">
+        <h3>Note</h3>
+        <iframe name='embed_readwrite'
+                src='/etherpad/p/note?showControls=true&showChat=false&showLineNumbers=true&useMonospaceFont=false'
+                width=100% height=300></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<script>
+(function() {
+
+var createDelayedEventHandler = function(target, event, delay, callback) {
+  if ($(target)[event] === undefined) {
+    throw new Error('Invalid event type.');
+  }
+  if (callback instanceof Function !== true) {
+    throw new Error('callbaack must be Function');
+  }
+  if (isNaN(delay)) {
+    throw new Error('delay must be number.');
+  }
+
+  var f = function() {
+    var timer;
+    $(target)[event](function() {
+      if (timer !== false) {
+        clearTimeout(timer);
+      }
+      timer = setTimeout(function() {
+        callback();
+      }, delay);
+    });
+  };
+
+  return f;
+};
+
+var setHeight = function() {
+  var $container =  $('#container');
+  var height = $container.height();
+  var wHeight = $(window).height();
+  if (height < wHeight) {
+    $container.css('marginTop', ($(window).height() - $container.outerHeight()) / 2);
+  }
+};
+
+var alignVertical = createDelayedEventHandler(window, 'resize', 250, function(){
+  setHeight();
+});
+
+setHeight();
+alignVertical();
+
+})();
+</script>
+</body>
+</html>
